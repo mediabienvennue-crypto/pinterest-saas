@@ -1,0 +1,135 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-body: 'DM Sans', system-ui, sans-serif;
+  --bg-primary: #07091a;
+  --bg-secondary: #0d1025;
+  --bg-card: rgba(255,255,255,0.04);
+  --border-subtle: rgba(255,255,255,0.08);
+  --purple-glow: rgba(168, 85, 247, 0.4);
+  --emerald-glow: rgba(16, 185, 129, 0.4);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--bg-primary);
+  font-family: var(--font-body);
+  color: #e2e8f0;
+  min-height: 100vh;
+  background-image: 
+    radial-gradient(ellipse at 20% 10%, rgba(139, 92, 246, 0.12) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 80%, rgba(16, 185, 129, 0.06) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 50%, rgba(59, 130, 246, 0.04) 0%, transparent 70%);
+}
+
+/* Glass morphism card */
+.glass-card {
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Purple shimmer button */
+.btn-primary {
+  background: linear-gradient(135deg, #7c3aed 0%, #a855f7 50%, #7c3aed 100%);
+  background-size: 200% auto;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 20px rgba(168, 85, 247, 0.3);
+}
+
+.btn-primary:hover {
+  background-position: right center;
+  box-shadow: 0 0 35px rgba(168, 85, 247, 0.5);
+  transform: translateY(-1px);
+}
+
+/* Ad skeleton shimmer */
+.ad-skeleton {
+  background: linear-gradient(
+    90deg,
+    rgba(255,255,255,0.03) 25%,
+    rgba(255,255,255,0.07) 50%,
+    rgba(255,255,255,0.03) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 2s linear infinite;
+}
+
+/* Checklist items */
+.checklist-item {
+  transition: all 0.2s ease;
+}
+.checklist-item:hover {
+  background: rgba(168, 85, 247, 0.08);
+  border-color: rgba(168, 85, 247, 0.3);
+}
+.checklist-item.checked {
+  opacity: 0.6;
+  text-decoration: line-through;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(168, 85, 247, 0.4); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(168, 85, 247, 0.6); }
+
+/* Prose SEO article */
+.seo-prose h2 {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #c4b5fd;
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+}
+.seo-prose h3 {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #a78bfa;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+.seo-prose p {
+  color: #94a3b8;
+  line-height: 1.8;
+  margin-bottom: 1rem;
+}
+.seo-prose ul {
+  list-style: disc;
+  padding-left: 1.5rem;
+  color: #94a3b8;
+}
+.seo-prose ul li {
+  margin-bottom: 0.4rem;
+  line-height: 1.7;
+}
+
+/* Modal overlay */
+.modal-overlay {
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+/* Neon border effect */
+.neon-border {
+  box-shadow: 0 0 0 1px rgba(168, 85, 247, 0.5), 0 0 20px rgba(168, 85, 247, 0.15);
+}
+
+/* Glow text */
+.glow-text {
+  text-shadow: 0 0 30px rgba(168, 85, 247, 0.6);
+}
