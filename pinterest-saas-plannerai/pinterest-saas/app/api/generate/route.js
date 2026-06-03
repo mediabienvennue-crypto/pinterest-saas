@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import { createServerClient } from '@/lib/supabase'
 import slugify from 'slugify'
 
-if (!process.env.GEMINI_API_KEY || !process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+if (!process.env.GROQ_API_KEY || !process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
   throw new Error('Missing environment variables')
 }
 
@@ -21,7 +21,6 @@ You MUST respond with ONLY valid JSON. No markdown, no explanation, no code fenc
 Pure JSON object only.`
 
     const userPrompt = `Create a comprehensive planner and SEO guide for the topic: "${sanitizedTopic}"
-
 Return ONLY this exact JSON structure (no markdown, no extra text):
 {
   "title": "Ultimate [Topic] Planner & Checklist",
@@ -47,23 +46,28 @@ Return ONLY this exact JSON structure (no markdown, no extra text):
   ]
 }`
 
-    const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: systemPrompt + '\n\n' + userPrompt }] }],
-          generationConfig: { temperature: 0.7, maxOutputTokens: 4000 }
-        })
-      }
-    )
+    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${process.env.GROQ_API_KEY}`
+      },
+      body: JSON.stringify({
+        model: 'llama-3.3-70b-versatile',
+        max_tokens: 4000,
+        temperature: 0.7,
+        messages: [
+          { role: 'system', content: systemPrompt },
+          { role: 'user', content: userPrompt }
+        ]
+      })
+    })
 
     const data = await response.json()
-    const text = data.candidates?.[0]?.content?.parts?.[0]?.text
+    const text = data.choices?.[0]?.message?.content
 
     if (!text) {
-      return NextResponse.json({ error: 'No response from Gemini' }, { status: 500 })
+      return NextResponse.json({ error: 'No response from Groq' }, { status: 500 })
     }
 
     const cleanText = text.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim()
