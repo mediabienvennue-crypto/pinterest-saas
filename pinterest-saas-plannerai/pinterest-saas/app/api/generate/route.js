@@ -101,7 +101,7 @@ Return ONLY this exact JSON structure (no markdown, no extra text):
       return NextResponse.json({ error: 'Failed to save planner' }, { status: 500 })
     }
 
-    return NextResponse.json({ slug: saved.slug, data: plannerData })
+    return NextResponse.json({ success: true, slug: saved.slug, planner: plannerData })
 
   } catch (error) {
     console.error('Generate error:', error)
