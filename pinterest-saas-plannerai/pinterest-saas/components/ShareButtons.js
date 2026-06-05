@@ -85,7 +85,8 @@ export default function ShareButtons({ title, slug, baseUrl, onCreditsAdded, has
       console.error('PDF error:', err)
     }
     setDownloading(false)
-      const buttons = [
+  }
+  const buttons = [
     {
       id: 'pinterest',
       label: shareSuccess === 'pinterest' ? '+3 Credits! ✓' : 'Pinterest',
@@ -224,5 +225,3 @@ export default function ShareButtons({ title, slug, baseUrl, onCreditsAdded, has
     </div>
   )
 }
-
-  }
