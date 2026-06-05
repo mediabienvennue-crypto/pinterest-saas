@@ -13,21 +13,26 @@ export default function ShareButtons({ title, slug, baseUrl, onCreditsAdded, has
 
   const handleShare = (platform) => {
     let url = ''
+
     if (platform === 'pinterest') {
       const ogImage = `${baseUrl}/api/og-image?title=${encodeURIComponent(title)}`
-      url = `https://pinterest.com{encodeURIComponent(pageUrl)}&media=${encodeURIComponent(ogImage)}&description=${encodeURIComponent(shareText)}`
+      url = `https://pinterest.com/pin/create/button/?url=${encodeURIComponent(pageUrl)}&media=${encodeURIComponent(ogImage)}&description=${encodeURIComponent(shareText)}`
       window.open(url, '_blank', 'width=750,height=550')
+
     } else if (platform === 'twitter') {
-      url = `https://twitter.com{encodeURIComponent(shareText)}&url=${encodeURIComponent(pageUrl)}`
+      url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(pageUrl)}`
       window.open(url, '_blank', 'width=550,height=420')
+
     } else if (platform === 'facebook') {
-      url = `https://facebook.com{encodeURIComponent(pageUrl)}`
+      url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(pageUrl)}`
       window.open(url, '_blank', 'width=600,height=400')
+
     } else if (platform === 'reddit') {
-      url = `https://reddit.com{encodeURIComponent(pageUrl)}&title=${encodeURIComponent(shareText)}`
+      url = `https://www.reddit.com/submit?url=${encodeURIComponent(pageUrl)}&title=${encodeURIComponent(shareText)}`
       window.open(url, '_blank', 'width=600,height=600')
+
     } else if (platform === 'linkedin') {
-      url = `https://linkedin.com{encodeURIComponent(pageUrl)}`
+      url = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(pageUrl)}`
       window.open(url, '_blank', 'width=600,height=600')
     }
 
@@ -52,11 +57,11 @@ export default function ShareButtons({ title, slug, baseUrl, onCreditsAdded, has
   const handleDownloadPDF = async () => {
     if (!hasShareBonus) return
     setDownloading(true)
-    
+
     try {
       const { default: jsPDF } = await import('jspdf')
       const plannerEl = document.getElementById('planner-content')
-      
+
       if (!plannerEl) {
         const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' })
         doc.setFillColor(7, 9, 26)
@@ -86,6 +91,7 @@ export default function ShareButtons({ title, slug, baseUrl, onCreditsAdded, has
     }
     setDownloading(false)
   }
+
   const buttons = [
     {
       id: 'pinterest',
@@ -182,8 +188,7 @@ export default function ShareButtons({ title, slug, baseUrl, onCreditsAdded, has
         ))}
       </div>
 
-      {/* PDF Download — unlocks after sharing */}
-      <div 
+      <div
         className={`flex items-center gap-3 p-3 rounded-xl border transition-all duration-300 ${
           hasShareBonus
             ? 'border-emerald-500/30 bg-emerald-500/5 cursor-pointer hover:bg-emerald-500/10'
