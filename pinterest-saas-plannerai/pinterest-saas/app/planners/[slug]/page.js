@@ -16,11 +16,11 @@ export async function generateMetadata({ params }) {
 
     if (!planner) return { title: 'Planner Not Found' }
 
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://your-domain.vercel.app'
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://youplanai.com'
     const ogImageUrl = `${baseUrl}/api/og-image?title=${encodeURIComponent(planner.title)}&emoji=${encodeURIComponent(planner.emoji || '✨')}&tags=${encodeURIComponent((planner.tags || []).join(','))}&difficulty=${encodeURIComponent(planner.difficulty || 'Beginner')}`
 
     return {
-      title: `${planner.title} | PlannerAI`,
+      title: `${planner.title} | YouPlanAI`,
       description: planner.meta_description,
       keywords: (planner.tags || []).join(', '),
       openGraph: {
@@ -37,7 +37,7 @@ export async function generateMetadata({ params }) {
       },
     }
   } catch {
-    return { title: 'PlannerAI' }
+    return { title: 'YouPlanAI' }
   }
 }
 
@@ -71,7 +71,7 @@ export default async function PlannerPage({ params }) {
 
   if (!planner) return notFound()
 
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://your-domain.vercel.app'
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://youplanai.com'
 
   // Build JSON-LD structured data
   const howToSchema = {
@@ -98,10 +98,10 @@ export default async function PlannerPage({ params }) {
     description: planner.meta_description,
     datePublished: planner.created_at,
     dateModified: planner.created_at,
-    author: { '@type': 'Organization', name: 'PlannerAI' },
+    author: { '@type': 'Organization', name: 'YouPlanAI' },
     publisher: {
       '@type': 'Organization',
-      name: 'PlannerAI',
+      name: 'YouPlanAI',
       logo: { '@type': 'ImageObject', url: `${baseUrl}/logo.png` },
     },
     image: `${baseUrl}/api/og-image?title=${encodeURIComponent(planner.title)}`,
