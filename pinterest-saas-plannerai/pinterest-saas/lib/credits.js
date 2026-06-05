@@ -1,87 +1,41 @@
-'use client'
+// YouPlanAI - Enterprise Credit Management System
 
-const STORAGE_KEY = 'planner_credits'
-const DAILY_LIMIT = 2
-const BONUS_CREDITS = 3
+const STORAGE_KEY = 'youplanai_credits';
+const INITIAL_CREDITS = 10; // 10 initial credits for 5 attempts
+const SEARCH_COST = 2;      // Deduct 2 credits per AI generation
 
 export function getCredits() {
-  if (typeof window === 'undefined') return DAILY_LIMIT
+  if (typeof window === 'undefined') return INITIAL_CREDITS;
   
-  try {
-    const stored = localStorage.getItem(STORAGE_KEY)
-    if (!stored) return DAILY_LIMIT
-
-    const data = JSON.parse(stored)
-    const today = new Date().toDateString()
-
-    // Reset daily credits if it's a new day
-    if (data.date !== today) {
-      const reset = { date: today, used: 0, bonus: data.bonus || 0 }
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(reset))
-      return DAILY_LIMIT + reset.bonus
-    }
-
-    const remaining = Math.max(0, DAILY_LIMIT - data.used + (data.bonus || 0))
-    return remaining
-  } catch {
-    return DAILY_LIMIT
+  const stored = localStorage.getItem(STORAGE_KEY);
+  if (stored === null) {
+    localStorage.setItem(STORAGE_KEY, INITIAL_CREDITS.toString());
+    return INITIAL_CREDITS;
   }
+  return parseInt(stored, 10);
 }
 
-export function useCredit() {
-  if (typeof window === 'undefined') return false
-
-  try {
-    const stored = localStorage.getItem(STORAGE_KEY)
-    const today = new Date().toDateString()
-    
-    let data = stored ? JSON.parse(stored) : { date: today, used: 0, bonus: 0 }
-    
-    if (data.date !== today) {
-      data = { date: today, used: 0, bonus: 0 }
-    }
-
-    const remaining = DAILY_LIMIT + (data.bonus || 0) - data.used
-    if (remaining <= 0) return false
-
-    data.used = (data.used || 0) + 1
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data))
-    return true
-  } catch {
-    return false
+export function deductSearchCredits() {
+  if (typeof window === 'undefined') return false;
+  
+  const current = getCredits();
+  if (current >= SEARCH_COST) {
+    const nextCredits = current - SEARCH_COST;
+    localStorage.setItem(STORAGE_KEY, nextCredits.toString());
+    return true; 
   }
-}
-
-export function addBonusCredits() {
-  if (typeof window === 'undefined') return DAILY_LIMIT
-
-  try {
-    const stored = localStorage.getItem(STORAGE_KEY)
-    const today = new Date().toDateString()
-    
-    let data = stored ? JSON.parse(stored) : { date: today, used: 0, bonus: 0 }
-    
-    if (data.date !== today) {
-      data = { date: today, used: 0, bonus: 0 }
-    }
-
-    data.bonus = (data.bonus || 0) + BONUS_CREDITS
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data))
-    
-    return DAILY_LIMIT + data.bonus - data.used
-  } catch {
-    return DAILY_LIMIT
-  }
+  return false; 
 }
 
 export function hasShareBonus() {
-  if (typeof window === 'undefined') return false
-  try {
-    const stored = localStorage.getItem(STORAGE_KEY)
-    if (!stored) return false
-    const data = JSON.parse(stored)
-    return (data.bonus || 0) > 0
-  } catch {
-    return false
-  }
+  if (typeof window === 'undefined') return false;
+  return localStorage.getItem('youplanai_shared') === 'true';
+}
+
+export function addBonusCredits(amount = 4) { 
+  if (typeof window === 'undefined') return;
+  
+  const current = getCredits();
+  localStorage.setItem(STORAGE_KEY, (current + amount).toString());
+  localStorage.setItem('youplanai_shared', 'true');
 }
