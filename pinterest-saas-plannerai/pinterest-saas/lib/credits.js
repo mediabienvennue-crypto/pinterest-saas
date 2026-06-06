@@ -1,8 +1,7 @@
 // YouPlanAI - Enterprise Credit Management System
-
 const STORAGE_KEY = 'youplanai_credits';
-const INITIAL_CREDITS = 10; // 10 initial credits for 5 attempts
-const SEARCH_COST = 2;      // Deduct 2 credits per AI generation
+const INITIAL_CREDITS = 10;
+const SEARCH_COST = 2;
 
 export function getCredits() {
   if (typeof window === 'undefined') return INITIAL_CREDITS;
@@ -22,9 +21,9 @@ export function deductSearchCredits() {
   if (current >= SEARCH_COST) {
     const nextCredits = current - SEARCH_COST;
     localStorage.setItem(STORAGE_KEY, nextCredits.toString());
-    return true; 
+    return true;
   }
-  return false; 
+  return false;
 }
 
 export function hasShareBonus() {
@@ -32,10 +31,19 @@ export function hasShareBonus() {
   return localStorage.getItem('youplanai_shared') === 'true';
 }
 
-export function addBonusCredits(amount = 4) { 
+export function addBonusCredits(amount = 4) {
   if (typeof window === 'undefined') return;
   
   const current = getCredits();
   localStorage.setItem(STORAGE_KEY, (current + amount).toString());
   localStorage.setItem('youplanai_shared', 'true');
+}
+
+export function useCredit() {
+  return deductSearchCredits();
+}
+
+export function resetCredits() {
+  if (typeof window === 'undefined') return;
+  localStorage.setItem(STORAGE_KEY, INITIAL_CREDITS.toString());
 }
