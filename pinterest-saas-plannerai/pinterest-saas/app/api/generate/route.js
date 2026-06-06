@@ -16,7 +16,6 @@ export async function POST(request) {
 
     const sanitizedTopic = topic.trim().slice(0, 120)
 
-    // توليد كلمات مفتاحية للصور من Unsplash
     const unsplashKeyword = encodeURIComponent(`artificial intelligence ${sanitizedTopic}`)
     const unsplashKeyword2 = encodeURIComponent(`AI technology productivity`)
     const unsplashKeyword3 = encodeURIComponent(`future technology planning`)
@@ -110,7 +109,7 @@ Return ONLY this exact JSON structure:
       },
       body: JSON.stringify({
         model: 'llama-3.3-70b-versatile',
-        max_tokens: 8000,
+        max_tokens: 4000,
         temperature: 0.75,
         messages: [
           { role: 'system', content: systemPrompt },
@@ -129,7 +128,6 @@ Return ONLY this exact JSON structure:
     const cleanText = text.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim()
     const plannerData = JSON.parse(cleanText)
 
-    // إضافة الصور للبيانات المحفوظة
     plannerData.heroImage = plannerData.heroImage || heroImage
     plannerData.sectionImage1 = sectionImage1
     plannerData.sectionImage2 = sectionImage2
