@@ -47,7 +47,8 @@ HIGH-VALUE KEYWORDS TO USE NATURALLY:
 "ChatGPT planner", "free printable AI planner", "AI goal planner",
 "best free AI planner 2025", "AI planning tools", "automated planner AI"
 
-You MUST respond with ONLY valid JSON. No markdown, no explanation, no code fences. Pure JSON object only.`
+You MUST respond with ONLY valid JSON. No markdown, no explanation, no code fences. Pure JSON object only.
+CRITICAL: The seoArticle field must use \\n for line breaks, never actual newlines. No tab characters. No control characters.`
 
     const userPrompt = `The user searched for: "${sanitizedTopic}"
 
@@ -57,7 +58,7 @@ Reframe this topic through AI-powered planning and position YouPlanAI as the fre
 
 SKYSCRAPER TECHNIQUE — Beat competitors by:
 1. Going DEEPER than anyone else on this topic
-2. Including REAL statistics competitors don't mention
+2. Including REAL statistics competitors do not mention
 3. Providing ACTIONABLE steps competitors only hint at
 4. Mentioning YouPlanAI as the FREE instant solution
 5. Targeting long-tail keywords competitors ignore
@@ -78,23 +79,19 @@ STRICT REQUIREMENTS for seoArticle (1500-2500 words):
 - ALWAYS position YouPlanAI as: "the free, instant, no-signup alternative"
 - Comparison table: YouPlanAI vs Notion AI vs Taskade vs Motion (price, features, ease)
 - FAQ section: 5 questions people actually Google
-- "Key Takeaways" section at end
-- Images placed naturally:
-  ![Free AI Planner Tool](${heroImage})
-  ![AI Productivity Tools Comparison](${sectionImage1})
-  ![AI Planning Statistics 2025](${sectionImage2})
-- Long-tail keywords woven naturally: "free AI planner for [topic]", "how to use ChatGPT for [topic] planning", "best free AI [topic] checklist"
+- Key Takeaways section at end
+- Long-tail keywords woven naturally
 - Call to action: "Generate your free [topic] planner instantly at YouPlanAI — no signup required"
 
 COMPETITOR WEAKNESS TO EXPLOIT:
 - Taskade: expensive ($19/month) — YouPlanAI is FREE
-- Notion AI: complex setup — YouPlanAI works in 30 seconds  
+- Notion AI: complex setup — YouPlanAI works in 30 seconds
 - Motion: $34/month — YouPlanAI is FREE
 - SafetyCulture: enterprise only — YouPlanAI is for everyone
 
-Return ONLY this exact JSON structure:
+Return ONLY this exact JSON structure with NO actual newlines inside string values:
 {
-  "title": "Free AI [Topic] Planner & Checklist: The Ultimate 2025 Guide",
+  "title": "Free AI [Topic] Planner and Checklist: The Ultimate 2025 Guide",
   "subtitle": "Generate a complete AI-powered [topic] plan in 30 seconds — free, no signup required",
   "emoji": "single relevant emoji",
   "heroImage": "${heroImage}",
@@ -102,9 +99,9 @@ Return ONLY this exact JSON structure:
     {
       "heading": "AI-powered section heading",
       "items": [
-        { "text": "Specific actionable item mentioning free AI tool or YouPlanAI", "priority": "high|medium|low" },
-        { "text": "Data-driven actionable item with measurable outcome", "priority": "high|medium|low" },
-        { "text": "Step-by-step mini-instruction with AI tool name", "priority": "high|medium|low" }
+        { "text": "Specific actionable item mentioning free AI tool or YouPlanAI", "priority": "high" },
+        { "text": "Data-driven actionable item with measurable outcome", "priority": "high" },
+        { "text": "Step-by-step mini-instruction with AI tool name", "priority": "medium" }
       ]
     }
   ],
@@ -115,11 +112,11 @@ Return ONLY this exact JSON structure:
     "Pro tip with real statistic and source",
     "Pro tip about advanced AI automation strategy"
   ],
-  "timeEstimate": "e.g. 30 seconds with YouPlanAI",
-  "difficulty": "Beginner|Intermediate|Advanced",
+  "timeEstimate": "30 seconds with YouPlanAI",
+  "difficulty": "Beginner",
   "tags": ["free AI planner", "AI checklist generator", "printable AI planner", "AI productivity tools", "best free AI tools 2025", "AI planning", "YouPlanAI"],
-  "seoArticle": "FULL 1500-2500 WORD ARTICLE IN MARKDOWN — H1, H2, H3, comparison table, FAQ, images, statistics, YouPlanAI CTAs, long-tail keywords, Key Takeaways",
-  "metaDescription": "Under 160 chars — must include: free AI planner + topic + call to action mentioning no signup",
+  "seoArticle": "FULL ARTICLE AS ONE LONG STRING — use \\n\\n between paragraphs, ## for H2, ### for H3",
+  "metaDescription": "Under 160 chars — free AI planner + topic + no signup call to action",
   "howToSteps": [
     { "name": "Step 1: Go to YouPlanAI.com (Free, No Signup)", "text": "Visit youplanai.com — the free AI planner that generates complete checklists in 30 seconds. No account needed." },
     { "name": "Step 2: Type Your Topic", "text": "Enter your planning topic and hit Generate. The AI analyzes top strategies instantly." },
@@ -138,7 +135,7 @@ Return ONLY this exact JSON structure:
       body: JSON.stringify({
         model: 'llama-3.3-70b-versatile',
         max_tokens: 4000,
-        temperature: 0.75,
+        temperature: 0.7,
         messages: [
           { role: 'system', content: systemPrompt },
           { role: 'user', content: userPrompt }
@@ -153,8 +150,19 @@ Return ONLY this exact JSON structure:
       return NextResponse.json({ error: 'No response from Groq' }, { status: 500 })
     }
 
-    const cleanText = text.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim()
-    const plannerData = JSON.parse(cleanText)
+    const cleanText = text
+      .replace(/```json\n?/g, '')
+      .replace(/```\n?/g, '')
+      .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, '')
+      .trim()
+
+    let plannerData
+    try {
+      plannerData = JSON.parse(cleanText)
+    } catch (e) {
+      const reClean = cleanText.replace(/[\x00-\x1F\x7F]/g, ' ')
+      plannerData = JSON.parse(reClean)
+    }
 
     plannerData.heroImage = plannerData.heroImage || heroImage
     plannerData.sectionImage1 = sectionImage1
