@@ -48,7 +48,7 @@ HIGH-VALUE KEYWORDS TO USE NATURALLY:
 "best free AI planner 2025", "AI planning tools", "automated planner AI"
 
 You MUST respond with ONLY valid JSON. No markdown, no explanation, no code fences. Pure JSON object only.
-CRITICAL: The seoArticle field must use \\n for line breaks, never actual newlines. No tab characters. No control characters.`
+CRITICAL: The seoArticle field must be minimum 1500 words. Use \\n for line breaks, never actual newlines. No tab characters. No control characters.`
 
     const userPrompt = `The user searched for: "${sanitizedTopic}"
 
@@ -114,95 +114,4 @@ Return ONLY this exact JSON structure with NO actual newlines inside string valu
   ],
   "timeEstimate": "30 seconds with YouPlanAI",
   "difficulty": "Beginner",
-  "tags": ["free AI planner", "AI checklist generator", "printable AI planner", "AI productivity tools", "best free AI tools 2025", "AI planning", "YouPlanAI"],
-  "seoArticle": "FULL ARTICLE AS ONE LONG STRING — use \\n\\n between paragraphs, ## for H2, ### for H3",
-  "metaDescription": "Under 160 chars — free AI planner + topic + no signup call to action",
-  "howToSteps": [
-    { "name": "Step 1: Go to YouPlanAI.com (Free, No Signup)", "text": "Visit youplanai.com — the free AI planner that generates complete checklists in 30 seconds. No account needed." },
-    { "name": "Step 2: Type Your Topic", "text": "Enter your planning topic and hit Generate. The AI analyzes top strategies instantly." },
-    { "name": "Step 3: Get Your Complete AI Plan", "text": "Receive a full checklist, action steps, pro tips, and printable PDF — all free." },
-    { "name": "Step 4: Customize and Execute", "text": "Adapt the AI-generated plan to your specific needs and start executing immediately." },
-    { "name": "Step 5: Share and Earn Credits", "text": "Share your planner on social media to earn bonus credits for more free plans." }
-  ]
-}`
-
-    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${process.env.GROQ_API_KEY}`
-      },
-      body: JSON.stringify({
-        model: 'llama-3.3-70b-versatile',
-        max_tokens: 4000,
-        temperature: 0.7,
-        messages: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user', content: userPrompt }
-        ]
-      })
-    })
-
-    const data = await response.json()
-    const text = data.choices?.[0]?.message?.content
-
-    if (!text) {
-      return NextResponse.json({ error: 'No response from Groq' }, { status: 500 })
-    }
-
-    const cleanText = text
-      .replace(/```json\n?/g, '')
-      .replace(/```\n?/g, '')
-      .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, '')
-      .trim()
-
-    let plannerData
-    try {
-      plannerData = JSON.parse(cleanText)
-    } catch (e) {
-      const reClean = cleanText.replace(/[\x00-\x1F\x7F]/g, ' ')
-      plannerData = JSON.parse(reClean)
-    }
-
-    plannerData.heroImage = plannerData.heroImage || heroImage
-    plannerData.sectionImage1 = sectionImage1
-    plannerData.sectionImage2 = sectionImage2
-
-    const supabase = createServerClient()
-    const slug = slugify(plannerData.title || sanitizedTopic, { lower: true, strict: true })
-
-    const { data: saved, error: dbError } = await supabase
-      .from('planners')
-      .insert({
-        slug,
-        topic: sanitizedTopic,
-        title: plannerData.title,
-        subtitle: plannerData.subtitle,
-        emoji: plannerData.emoji,
-        hero_image: plannerData.heroImage,
-        section_image1: sectionImage1,
-        section_image2: sectionImage2,
-        sections: plannerData.sections,
-        tips: plannerData.tips,
-        time_estimate: plannerData.timeEstimate,
-        difficulty: plannerData.difficulty,
-        tags: plannerData.tags,
-        seo_article: plannerData.seoArticle,
-        meta_description: plannerData.metaDescription,
-        how_to_steps: plannerData.howToSteps,
-      })
-      .select()
-      .single()
-
-    if (dbError) {
-      console.error('DB Error:', dbError)
-      return NextResponse.json({ error: 'Failed to save planner' }, { status: 500 })
-    }
-
-    return NextResponse.json({ success: true, slug: saved.slug, planner: plannerData })
-
-  } catch (error) {
-    console.error('Generate error:', error)
-    return NextResponse.json({ error: 'Generation failed' }, { status: 500 })
-  }
-}
+  "tags": ["free AI planner", "AI checklist g
