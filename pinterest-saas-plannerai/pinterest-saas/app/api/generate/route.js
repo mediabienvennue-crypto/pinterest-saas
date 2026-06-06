@@ -1,7 +1,9 @@
 import { NextResponse } from 'next/server'
 import { createServerClient } from '@/lib/supabase'
 import slugify from 'slugify'
+
 export const maxDuration = 60
+
 if (!process.env.GROQ_API_KEY || !process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
   throw new Error('Missing environment variables')
 }
@@ -24,80 +26,106 @@ export async function POST(request) {
     const sectionImage1 = `https://source.unsplash.com/800x450/?${unsplashKeyword2}`
     const sectionImage2 = `https://source.unsplash.com/800x450/?${unsplashKeyword3}`
 
-    const systemPrompt = `You are a world-class SEO content writer and AI productivity expert.
+    const systemPrompt = `You are a world-class SEO content writer, AI productivity expert, and Google-certified content strategist.
+
 Your ONLY specialty is: "How Artificial Intelligence tools help people plan, organize, and automate their personal and professional life."
+
+CORE MISSION: Position YouPlanAI (youplanai.com) as the FREE alternative to expensive tools like Notion AI, Motion, Taskade, and Reclaim.ai.
+
 Every piece of content you create MUST:
-- Connect the user's topic to AI-powered planning tools and strategies
+- Target people searching for FREE AI planning tools
+- Compare YouPlanAI favorably against paid competitors
 - Be written in fluent, engaging, human-like English
-- Be 100% unique, informative, and deeply researched
-- Include specific statistics, facts, and real AI tool names
-- Be optimized for Google search ranking
+- Be 100% unique, deeply researched, and packed with value
+- Naturally include high-value SEO keywords throughout
+- Be optimized to rank #1 on Google for AI planning topics
+
+HIGH-VALUE KEYWORDS TO USE NATURALLY:
+"free AI planner", "AI checklist generator", "printable AI planner",
+"how to use AI for planning", "AI productivity tools free",
+"free AI template", "AI daily planner", "AI weekly schedule generator",
+"ChatGPT planner", "free printable AI planner", "AI goal planner",
+"best free AI planner 2025", "AI planning tools", "automated planner AI"
+
 You MUST respond with ONLY valid JSON. No markdown, no explanation, no code fences. Pure JSON object only.`
 
     const userPrompt = `The user searched for: "${sanitizedTopic}"
 
-Reframe this topic through the lens of AI-powered planning and productivity.
+YOUR MISSION: Create the BEST and most comprehensive piece of content on the internet about this topic — better than Taskade, Notion AI, SafetyCulture, and Lindy.ai combined.
 
-Examples of reframing:
-- "Home cleaning" → "How to Use AI to Create a Smart Home Cleaning Schedule"
-- "Wedding planning" → "AI-Powered Wedding Planning: The Complete Guide"
-- "Fitness routine" → "Build Your Perfect Fitness Plan Using AI Coaches"
-- "Starting a business" → "How AI Planning Tools Help You Launch a Business Faster"
+Reframe this topic through AI-powered planning and position YouPlanAI as the free solution.
 
-Now create a PREMIUM, deeply informative article for: "${sanitizedTopic}"
+SKYSCRAPER TECHNIQUE — Beat competitors by:
+1. Going DEEPER than anyone else on this topic
+2. Including REAL statistics competitors don't mention
+3. Providing ACTIONABLE steps competitors only hint at
+4. Mentioning YouPlanAI as the FREE instant solution
+5. Targeting long-tail keywords competitors ignore
 
-STRICT REQUIREMENTS for seoArticle:
-- Total length: 1500 to 2500 words MINIMUM
-- Must have 1 main H1 title
-- Must have at least 6 H2 sections
-- Each H2 section must have 2-3 H3 subsections
-- Must include real statistics (e.g. "According to McKinsey 2024, AI increases productivity by 40%")
-- Must mention at least 8 specific AI tools by name (ChatGPT, Claude, Notion AI, Copilot, Jasper, ClickUp AI, Motion, Reclaim.ai, etc.)
-- Must include a comparison table in markdown format
-- Must include a FAQ section with 5 questions and detailed answers
-- Must include a "Key Takeaways" section at the end
-- Must include these image placeholders exactly where relevant:
-  ![AI Planning Hero](${heroImage})
-  ![AI Tools Overview](${sectionImage1})
-  ![AI Productivity Statistics](${sectionImage2})
-- Every section must be packed with actionable advice, not generic filler
-- Use power words: "proven", "essential", "breakthrough", "data-driven", "game-changing"
-- Naturally include long-tail keywords like: "best AI tools for [topic]", "how to use AI for [topic]", "AI-powered [topic] strategies"
+STRICT REQUIREMENTS for seoArticle (1500-2500 words):
+- H1: Must include "free AI planner" or "AI [topic] planner" naturally
+- H2 sections (minimum 6):
+  * "What is AI-Powered [Topic] Planning?"
+  * "Why Traditional [Topic] Planning Fails (And How AI Fixes It)"
+  * "Best Free AI Tools for [Topic] Planning in 2025"
+  * "Step-by-Step: How to Use AI for [Topic] Planning"
+  * "Free AI [Topic] Planner vs Paid Tools: Honest Comparison"
+  * "How to Generate Your Free [Topic] Planner in 30 Seconds"
+  * "Expert Tips for AI-Powered [Topic] Success"
+- Each H2 must have 2-3 H3 subsections
+- Real statistics with sources (McKinsey, Gartner, Forbes, Harvard)
+- Mention 8+ AI tools: ChatGPT, Claude, YouPlanAI, Notion AI, Motion, Taskade, Reclaim.ai, ClickUp AI
+- ALWAYS position YouPlanAI as: "the free, instant, no-signup alternative"
+- Comparison table: YouPlanAI vs Notion AI vs Taskade vs Motion (price, features, ease)
+- FAQ section: 5 questions people actually Google
+- "Key Takeaways" section at end
+- Images placed naturally:
+  ![Free AI Planner Tool](${heroImage})
+  ![AI Productivity Tools Comparison](${sectionImage1})
+  ![AI Planning Statistics 2025](${sectionImage2})
+- Long-tail keywords woven naturally: "free AI planner for [topic]", "how to use ChatGPT for [topic] planning", "best free AI [topic] checklist"
+- Call to action: "Generate your free [topic] planner instantly at YouPlanAI — no signup required"
+
+COMPETITOR WEAKNESS TO EXPLOIT:
+- Taskade: expensive ($19/month) — YouPlanAI is FREE
+- Notion AI: complex setup — YouPlanAI works in 30 seconds  
+- Motion: $34/month — YouPlanAI is FREE
+- SafetyCulture: enterprise only — YouPlanAI is for everyone
 
 Return ONLY this exact JSON structure:
 {
-  "title": "How to Use AI to Plan [Topic]: The Ultimate 2025 Guide",
-  "subtitle": "Discover AI-powered strategies and tools to master [topic] faster and smarter",
+  "title": "Free AI [Topic] Planner & Checklist: The Ultimate 2025 Guide",
+  "subtitle": "Generate a complete AI-powered [topic] plan in 30 seconds — free, no signup required",
   "emoji": "single relevant emoji",
   "heroImage": "${heroImage}",
   "sections": [
     {
-      "heading": "Section heading related to AI planning",
+      "heading": "AI-powered section heading",
       "items": [
-        { "text": "Highly specific actionable checklist item with AI tool mention", "priority": "high|medium|low" },
-        { "text": "Another specific AI-focused actionable item", "priority": "high|medium|low" },
-        { "text": "Third specific item with measurable outcome", "priority": "high|medium|low" }
+        { "text": "Specific actionable item mentioning free AI tool or YouPlanAI", "priority": "high|medium|low" },
+        { "text": "Data-driven actionable item with measurable outcome", "priority": "high|medium|low" },
+        { "text": "Step-by-step mini-instruction with AI tool name", "priority": "high|medium|low" }
       ]
     }
   ],
   "tips": [
-    "Specific pro tip with AI tool name and expected result",
-    "Specific pro tip about automating this with AI and time saved",
-    "Specific pro tip with step-by-step mini instruction",
-    "Specific pro tip with statistics or data",
-    "Specific pro tip about advanced AI strategy"
+    "Pro tip with specific AI tool name, exact action, and time saved",
+    "Pro tip comparing free YouPlanAI vs paid alternatives with savings amount",
+    "Pro tip with step-by-step instruction and expected result",
+    "Pro tip with real statistic and source",
+    "Pro tip about advanced AI automation strategy"
   ],
-  "timeEstimate": "e.g. 2-3 hours",
+  "timeEstimate": "e.g. 30 seconds with YouPlanAI",
   "difficulty": "Beginner|Intermediate|Advanced",
-  "tags": ["AI planning", "artificial intelligence", "AI tools", "productivity AI", "best AI tools 2025", "AI automation", "relevant specific tag"],
-  "seoArticle": "YOUR FULL 1500-2500 WORD ARTICLE IN MARKDOWN FORMAT HERE — with H1, H2, H3, tables, FAQ, images, statistics, tool names, and Key Takeaways",
-  "metaDescription": "SEO meta description under 160 characters mentioning AI, planning, and the topic with a call to action",
+  "tags": ["free AI planner", "AI checklist generator", "printable AI planner", "AI productivity tools", "best free AI tools 2025", "AI planning", "YouPlanAI"],
+  "seoArticle": "FULL 1500-2500 WORD ARTICLE IN MARKDOWN — H1, H2, H3, comparison table, FAQ, images, statistics, YouPlanAI CTAs, long-tail keywords, Key Takeaways",
+  "metaDescription": "Under 160 chars — must include: free AI planner + topic + call to action mentioning no signup",
   "howToSteps": [
-    { "name": "Step 1: Audit Your Current Process with AI", "text": "Detailed step description with specific AI tool and exact action" },
-    { "name": "Step 2: Choose the Right AI Planning Tool", "text": "Detailed step with comparison criteria and tool recommendations" },
-    { "name": "Step 3: Set Up Your AI-Powered Workflow", "text": "Detailed step with exact setup instructions" },
-    { "name": "Step 4: Automate and Optimize", "text": "Detailed step about automation and measuring results" },
-    { "name": "Step 5: Scale and Improve", "text": "Detailed step about scaling the AI strategy" }
+    { "name": "Step 1: Go to YouPlanAI.com (Free, No Signup)", "text": "Visit youplanai.com — the free AI planner that generates complete checklists in 30 seconds. No account needed." },
+    { "name": "Step 2: Type Your Topic", "text": "Enter your planning topic and hit Generate. The AI analyzes top strategies instantly." },
+    { "name": "Step 3: Get Your Complete AI Plan", "text": "Receive a full checklist, action steps, pro tips, and printable PDF — all free." },
+    { "name": "Step 4: Customize and Execute", "text": "Adapt the AI-generated plan to your specific needs and start executing immediately." },
+    { "name": "Step 5: Share and Earn Credits", "text": "Share your planner on social media to earn bonus credits for more free plans." }
   ]
 }`
 
