@@ -8,6 +8,9 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
+      <head>
+        <meta name="google-site-verification" content="5U7Oht4l2ZsbXTsTQJyR8c_1H74sfEZ9ML6uwHmw2x8" />
+      </head>
       <body className="bg-[#0b0c10] text-[#c5c6c7] font-sans antialiased min-h-screen flex flex-col justify-between">
         
         {/* Main Content Area */}
@@ -22,7 +25,7 @@ export default function RootLayout({ children }) {
               {/* Brand Segment */}
               <div className="flex flex-col items-center md:items-start">
                   <span className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-indigo-500 tracking-wide">YouPlanAI</span>
-                  <p class="text-xs text-gray-500 mt-2">© 2026 YouPlanAI. Operational Intelligence Platform.</p>
+                  <p className="text-xs text-gray-500 mt-2">© 2026 YouPlanAI. Operational Intelligence Platform.</p>
               </div>
 
               {/* Structural Navigation Vector (The 5 Pages) */}
@@ -33,7 +36,6 @@ export default function RootLayout({ children }) {
                   <a href="/privacy-policy" className="hover:text-purple-400 transition-colors duration-200">Privacy Policy</a>
                   <a href="/terms-conditions" className="hover:text-purple-400 transition-colors duration-200">Terms & Conditions</a>
               </div>
-
           </div>
         </footer>
         {/* END OF YOUPLANAI PREMIUM FOOTER BLOCK */}
